@@ -1,0 +1,21 @@
+# dsh-migrate patch overlay.
+#
+# What this does: registers the `/migrate` slash command from this package
+# and points DSH's session store at a dedicated "imported" root so migrated
+# logs never mix with (or collide with) the default store's zstd encoding.
+# Imported sessions appear under the "imported" workspace in the sidebar,
+# grouped by their original project directory.
+#
+# Apply for one run:
+#   dsh web --patch node_modules/@kodzhima/dsh-migrate/cordis.patch.yml
+# …or merge these rows into $DSH_HOME/profiles/web/cordis.patch.yml to keep
+# the migration store permanently.
+
+- id: session-persistence-jsonl
+  config:
+    root: !!js dshHomePath('sessions-imported')
+    compression: none
+
+- insert:
+    - id: dsh-migrate
+      name: '@kodzhima/dsh-migrate/plugin'
