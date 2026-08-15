@@ -16,6 +16,8 @@ Switching harnesses should not mean losing your context. `dsh-migrate` reads the
 | **Cline / Roo Code** | VS Code `globalStorage/*/tasks/*/api_conversation_history.json` | — |
 | **OpenCode** | `~/.local/share/opencode/**` message/part JSON files | — |
 | **Aider** | `**/.aider.chat.history.md` (bounded scan) | `CONVENTIONS.md` files |
+| **Hermes Agent** | `~/.hermes/state.db` (SQLite sessions+messages, read-only) | `~/.hermes/memories/MEMORY.md`, `USER.md` |
+| **OpenClaw** | `~/.openclaw/agents/*/agent/openclaw-agent.sqlite` (transcript_events, read-only) | workspace `MEMORY.md`, `memory/*.md` |
 
 Every adapter is tolerant: malformed lines and unknown row types are skipped, never fatal. Missing fields degrade gracefully (unknown model → `imported`, unknown cwd → the `_no-cwd` project).
 
@@ -91,6 +93,7 @@ The trailing `session/end-seed` event makes the whole imported log *seed history
 - **Read-only on sources.** The importer never writes to the source agents' directories.
 - **Images and attachments** are not imported (DSH attachments are content-addressed host objects); their surrounding text is.
 - **Compaction history** in source transcripts is flattened to plain messages.
+- **SQLite sources are read immutably** (`mode=ro&immutable=1`), so a running Hermes/OpenClaw gateway is never disturbed. OpenClaw imports every `session_window`; resets/rollover windows appear as separate sessions (they were separate transcripts upstream too).
 - **Aider scan roots** are `$DSH_MIGRATE_SCAN` (path-list), `~/projects`, `~/code`, `~/dev`, `~/work`, and a shallow `$HOME` sweep — its history files live inside projects, so a fixed home-relative path cannot find them.
 - Format drift: these layouts are undocumented internals of the source agents and change over time. Adapters skip what they do not recognise; if your agent version is newer, please open an issue with a (redacted) sample row.
 

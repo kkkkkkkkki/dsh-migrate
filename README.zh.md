@@ -16,6 +16,8 @@
 | **Cline / Roo Code** | VS Code `globalStorage/*/tasks/*/api_conversation_history.json` | — |
 | **OpenCode** | `~/.local/share/opencode/**` 消息/part JSON | — |
 | **Aider** | `**/.aider.chat.history.md`(有界扫描) | `CONVENTIONS.md` |
+| **Hermes Agent** | `~/.hermes/state.db`(SQLite sessions+messages,只读) | `~/.hermes/memories/MEMORY.md`、`USER.md` |
+| **OpenClaw** | `~/.openclaw/agents/*/agent/openclaw-agent.sqlite`(transcript_events,只读) | 工作区 `MEMORY.md`、`memory/*.md` |
 
 所有适配器都是容错读取：坏行和未知行类型直接跳过，不会中断。缺字段时优雅降级（模型未知 → `imported`,cwd 未知 → `_no-cwd` 项目）。
 
@@ -91,6 +93,7 @@ $DSH_HOME/sessions-imported/--<项目目录>--/<id>/session.jsonl
 - **对源只读。** 导入器从不写源 agent 的目录。
 - **图片和附件**不导入（DSH 附件是内容寻址的宿主对象）；其上下文文本会保留。
 - 源会话里的**压缩历史**会展平成普通消息。
+- **SQLite 来源用不可变只读方式打开**(`mode=ro&immutable=1`),正在运行的 Hermes/OpenClaw gateway 完全不受影响。OpenClaw 的每个 `session_window` 都会导入;reset/rollover 产生的窗口在源端就是独立 transcript,导入后同样是独立会话。
 - **Aider 扫描根**:`$DSH_MIGRATE_SCAN`（路径列表）、`~/projects`、`~/code`、`~/dev`、`~/work`，外加 `$HOME` 浅扫——它的历史文件在项目目录里，固定的 home 相对路径找不到。
 - 格式漂移：这些目录结构是各 agent 的未公开内部格式，会随版本变化。适配器对不认识的行一律跳过；如果你用的版本较新导致导入不全，欢迎提 issue 并附（脱敏后的）示例行。
 
