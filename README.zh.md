@@ -25,7 +25,7 @@
 
 ```sh
 # 1. 把插件装进 DSH web profile
-dsh plugin --profile web add @kodzhima/dsh-migrate
+dsh plugin --profile web add @ersss/dsh-migrate
 
 # 2. 重启 DSH
 dsh web
@@ -51,10 +51,10 @@ DSH 内部（Web UI / TUI / headless):
 也可以在 DSH 未运行时直接用 CLI（大批量迁移推荐）:
 
 ```sh
-npx @kodzhima/dsh-migrate list
-npx @kodzhima/dsh-migrate run                       # → $DSH_HOME/sessions-imported
-npx @kodzhima/dsh-migrate run --out /path/to/root   # 自定义输出目录
-npx @kodzhima/dsh-migrate run --write-instructions .  # 同时把记忆写入 ./AGENTS.md
+npx @ersss/dsh-migrate list
+npx @ersss/dsh-migrate run                       # → $DSH_HOME/sessions-imported
+npx @ersss/dsh-migrate run --out /path/to/root   # 自定义输出目录
+npx @ersss/dsh-migrate run --write-instructions .  # 同时把记忆写入 ./AGENTS.md
 ```
 
 导入的会话按原始项目目录分组显示在侧边栏，Trajectory 视图中可以看到完整事件流——prompt、推理、工具调用和结果。

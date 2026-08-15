@@ -7,7 +7,7 @@
 # grouped by their original project directory.
 #
 # Apply for one run:
-#   dsh web --patch node_modules/@kodzhima/dsh-migrate/cordis.patch.yml
+#   dsh web --patch node_modules/@ersss/dsh-migrate/cordis.patch.yml
 # …or merge these rows into $DSH_HOME/profiles/web/cordis.patch.yml to keep
 # the migration store permanently.
 
@@ -18,4 +18,4 @@
 
 - insert:
     - id: dsh-migrate
-      name: '@kodzhima/dsh-migrate/plugin'
+      name: '@ersss/dsh-migrate/plugin'

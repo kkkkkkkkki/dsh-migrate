@@ -76,7 +76,7 @@ program
     }
     console.log('\nOpen them in DSH with the migration overlay (raw-JSONL store at')
     console.log('$DSH_HOME/sessions-imported + the /migrate command):')
-    console.log('  dsh web --patch node_modules/@kodzhima/dsh-migrate/cordis.patch.yml')
+    console.log('  dsh web --patch node_modules/@ersss/dsh-migrate/cordis.patch.yml')
     console.log('Imported sessions surface under the "imported" workspace, grouped')
     console.log('by their original project directory.')
   })

@@ -25,7 +25,7 @@ Every adapter is tolerant: malformed lines and unknown row types are skipped, ne
 
 ```sh
 # 1. Install the plugin into your DSH web profile
-dsh plugin --profile web add @kodzhima/dsh-migrate
+dsh plugin --profile web add @ersss/dsh-migrate
 
 # 2. Restart DSH
 dsh web
@@ -51,10 +51,10 @@ From inside DSH (Web UI, TUI, headless):
 From a terminal, without DSH running (also the right choice for big archives):
 
 ```sh
-npx @kodzhima/dsh-migrate list
-npx @kodzhima/dsh-migrate run                       # → $DSH_HOME/sessions-imported
-npx @kodzhima/dsh-migrate run --out /path/to/root   # anywhere you like
-npx @kodzhima/dsh-migrate run --write-instructions .  # also fold memory into ./AGENTS.md
+npx @ersss/dsh-migrate list
+npx @ersss/dsh-migrate run                       # → $DSH_HOME/sessions-imported
+npx @ersss/dsh-migrate run --out /path/to/root   # anywhere you like
+npx @ersss/dsh-migrate run --write-instructions .  # also fold memory into ./AGENTS.md
 ```
 
 Imported sessions appear in the sidebar grouped by their original project directory, and in the Trajectory view with their full event stream — prompts, reasoning, tool calls, and results.

@@ -26,19 +26,19 @@ few minutes.
 
 ## 3. (Optional) Publish to npm so `dsh plugin add` / `npx` work by name
 
-The README's install flows assume the npm package `@kodzhima/dsh-migrate`.
+The README's install flows assume the npm package `@ersss/dsh-migrate`.
 (If you publish under a different scope, update `package.json` `name`,
 `cordis.patch.yml`, and both READMEs first.)
 
 ```sh
 npm run build
-npm publish --access public      # needs `npm login` with publish rights on @kodzhima
+npm publish --access public      # needs `npm login` with publish rights on @ersss
 ```
 
 Until it is on npm, installation from the GitHub repo also works:
 
 ```sh
-dsh plugin --profile web add kodzhima/dsh-migrate   # or <you>/dsh-migrate
+dsh plugin --profile web add kkkkkkkkki/dsh-migrate   # GitHub direct install
 ```
 
 ## 4. (Optional) Announce

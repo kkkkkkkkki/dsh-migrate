@@ -10,7 +10,7 @@
  * link to the harness (the ambient declarations in plugin.d.ts cover the
  * types when the harness packages are not installed).
  *
- * @module @kodzhima/dsh-migrate/plugin
+ * @module @ersss/dsh-migrate/plugin
  */
 import { homedir } from 'node:os'
 import { defaultSessionsRoot, detect, migrate } from './dsh/migrate.ts'
