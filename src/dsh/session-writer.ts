@@ -248,6 +248,10 @@ export function renderSessionLog(session: IrSession, options: { id?: string; now
     delegationDepth: 0,
   }
   if (session.cwd !== undefined) header.cwd = session.cwd
+  // Import provenance on the header itself, so importers and UIs can filter or
+  // badge migrated sessions without walking the event stream.
+  header.importedSource = session.source
+  if (session.sourceId !== undefined) header.importedSourceId = session.sourceId
 
   const state: EmitState = { seq: 0, time: createdAt, lines: [] }
   let turnNo = 0

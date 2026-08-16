@@ -1,10 +1,13 @@
 import type { SourceAdapter } from '../ir.ts'
 import { aiderAdapter } from './aider.ts'
+import { chatGptAdapter } from './chatgpt.ts'
 import { claudeCodeAdapter } from './claude-code.ts'
 import { clineAdapter } from './cline.ts'
 import { codexAdapter } from './codex.ts'
+import { cursorAdapter } from './cursor.ts'
 import { geminiCliAdapter } from './gemini-cli.ts'
 import { hermesAdapter } from './hermes.ts'
+import { kimiCliAdapter } from './kimi-cli.ts'
 import { openClawAdapter } from './openclaw.ts'
 import { openCodeAdapter } from './opencode.ts'
 
@@ -18,6 +21,9 @@ export const adapters: SourceAdapter[] = [
   aiderAdapter,
   hermesAdapter,
   openClawAdapter,
+  cursorAdapter,
+  chatGptAdapter,
+  kimiCliAdapter,
 ]
 
 export function adapterByKey(key: string): SourceAdapter | undefined {

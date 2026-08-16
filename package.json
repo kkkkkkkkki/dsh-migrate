@@ -1,6 +1,6 @@
 {
   "name": "@ersss/dsh-migrate",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Import chat history and memory from other AI agents (Claude Code, Codex CLI, Gemini CLI, Aider, Cline, OpenCode, Hermes Agent, OpenClaw) into DeepSeek Harness",
   "license": "MIT",
   "type": "module",

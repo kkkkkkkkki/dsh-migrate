@@ -2,9 +2,16 @@
 
 English | [中文](README.zh.md)
 
+[![npm version](https://img.shields.io/npm/v/%40ersss%2Fdsh-migrate)](https://www.npmjs.com/package/@ersss/dsh-migrate)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Node.js ≥ 22.13](https://img.shields.io/badge/Node.js-%E2%89%A5%2022.13-339933?logo=node.js&logoColor=white)](package.json)
+[![Awesome DSH Plugin](https://awesome-dsh-plugin.com/badge.svg)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
+
 Import chat history and memory from other AI agents into [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
 Switching harnesses should not mean losing your context. `dsh-migrate` reads the transcripts and memory stores other agents leave on disk and writes them as native DeepSeek Harness session logs — searchable, inspectable in the Trajectory view, and resumable (`--fork`-style continue) as if they had been recorded by DSH itself.
+
+It works two ways: a **`/migrate` slash command** inside DSH, and a **standalone CLI** (`npx @ersss/dsh-migrate`) that scans the whole machine and previews with a dry run before writing anything.
 
 ## Supported sources
 
@@ -13,6 +20,9 @@ Switching harnesses should not mean losing your context. `dsh-migrate` reads the
 | **Claude Code** | `~/.claude/projects/**.jsonl` (text, thinking, tool_use/tool_result) | `~/.claude/CLAUDE.md`, project `memory/*.md` |
 | **Codex CLI** | `~/.codex/sessions/**/rollout-*.jsonl` (messages, reasoning, function calls) | `~/.codex/AGENTS.md`, `instructions.md` |
 | **Gemini CLI** | `~/.gemini/tmp/**/chats/session-*.json` (messages, thoughts, toolCalls) | `~/.gemini/GEMINI.md` |
+| **Cursor** | `~/.cursor/projects/*/agent-transcripts/*/*.jsonl` (text, tool_use; results live in Cursor's bubble store and are not recorded) | — |
+| **Kimi CLI** | `~/.kimi/sessions/*/*/wire.jsonl` (text, thinking, tool calls; cwd recovered via `kimi.json`) | — |
+| **ChatGPT (web export)** | `conversations.json` from the data export (DAG-mapped threads; tool messages folded to text) | — |
 | **Cline / Roo Code** | VS Code `globalStorage/*/tasks/*/api_conversation_history.json` | — |
 | **OpenCode** | `~/.local/share/opencode/**` message/part JSON files | — |
 | **Aider** | `**/.aider.chat.history.md` (bounded scan) | `CONVENTIONS.md` files |
@@ -80,7 +90,7 @@ Mapping decisions, briefly:
 - **Turns.** One source user prompt (plus the assistant work it triggered) becomes one `turn/start…turn/end` bracket. Tool-result-only user rows (Claude Code, Cline) attach to the pending `tool/call` instead of opening a turn.
 - **Messages.** User and system text become `user/message` events; assistant text/reasoning/tool-calls become one `assistant/message` per step; tool results become `tool/result` paired by call id.
 - **Provenance, not impersonation.** Imported assistant messages keep the original provider and model (`provider: "dsh-migrate:anthropic", model: "claude-fable-5"`). Imported user messages are `kind: "user"` — required for the trajectory view and history derivation — with the importer declared on the merge-extensible `via` channel (`via: "dsh-migrate:claude-code"`).
-- **Timestamps and ids.** Original timestamps are preserved when the source records them (monotonicity enforced); missing call ids get fresh UUIDs; session ids are fresh UUIDs (never the source's) so an import can never shadow a live session.
+- **Timestamps and ids.** Original timestamps are preserved when the source records them (monotonicity enforced); missing call ids get fresh UUIDs; session ids are fresh UUIDs (never the source's) so an import can never shadow a live session. The header carries `importedSource` / `importedSourceId`, so imported sessions are filterable without walking the event stream.
 - **Memory.** Each source's memory records become one "Imported memory" session (readable, searchable, resumable), and `--write-instructions <project>` additionally folds them into that project's `AGENTS.md` between `<!-- dsh-migrate … -->` markers (idempotent re-runs).
 - **Append-only honesty.** Writes use `wx` (no overwrite). A colliding id is retried with a fresh one; existing logs are never modified.
 
@@ -93,6 +103,7 @@ The trailing `session/end-seed` event makes the whole imported log *seed history
 - **Read-only on sources.** The importer never writes to the source agents' directories.
 - **Images and attachments** are not imported (DSH attachments are content-addressed host objects); their surrounding text is.
 - **Compaction history** in source transcripts is flattened to plain messages.
+- **Source-specific gaps**, by design of the source format: Cursor transcripts don't record tool results (calls import without results); ChatGPT exports have no structured tool calls (tool messages become text); Kimi CLI sub-agent internals mirrored as `SubagentEvent` are skipped (import `subagents/<id>/wire.jsonl` directly if you want them).
 - **SQLite sources are read immutably** (`mode=ro&immutable=1`), so a running Hermes/OpenClaw gateway is never disturbed. OpenClaw imports every `session_window`; resets/rollover windows appear as separate sessions (they were separate transcripts upstream too).
 - **Aider scan roots** are `$DSH_MIGRATE_SCAN` (path-list), `~/projects`, `~/code`, `~/dev`, `~/work`, and a shallow `$HOME` sweep — its history files live inside projects, so a fixed home-relative path cannot find them.
 - Format drift: these layouts are undocumented internals of the source agents and change over time. Adapters skip what they do not recognise; if your agent version is newer, please open an issue with a (redacted) sample row.
